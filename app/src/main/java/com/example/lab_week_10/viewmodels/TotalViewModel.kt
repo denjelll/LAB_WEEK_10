@@ -5,24 +5,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class TotalViewModel : ViewModel() {
-
-    // 2. Buat versi private yang BISA DIUBAH (Mutable)
+class TotalViewModel: ViewModel() {
+    //Declare the LiveData object
     private val _total = MutableLiveData<Int>()
-
-    // 3. Buat versi public yang HANYA BISA DIBACA (Observable)
-    val total: LiveData<Int>
-        get() = _total // 'total' akan mengembalikan nilai dari '_total'
-
-    // 4. Inisialisasi nilai awal
+    val total: LiveData<Int> = _total
+    //Initialize the LiveData object
     init {
-        _total.value = 0
+        //postValue is used to set the value of the LiveData object
+        //from a background thread or the main thread
+        //While on the other hand setValue() is used
+        //only if you're on the main thread
+        _total.postValue(0)
     }
-
-    // 5. Ubah fungsi increment untuk MENGUBAH NILAI .value
+    //Increment the total value
     fun incrementTotal() {
-        // Ambil nilai saat ini (atau 0 jika null), tambahkan 1, lalu set lagi
-        _total.value = (_total.value ?: 0) + 1
-        // Fungsi ini tidak perlu me-return apa-apa
+        _total.postValue(_total.value?.plus(1))
     }
 }
