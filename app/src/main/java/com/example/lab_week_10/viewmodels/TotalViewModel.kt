@@ -1,29 +1,35 @@
+// Pastikan file ini ada di: .../viewmodels/TotalViewModel.kt
 package com.example.lab_week_10.viewmodels
 
-// 1. Import LiveData dan MutableLiveData
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+// Impor TotalObject baru Anda
+import com.example.lab_week_10.database.TotalObject
+import java.util.Date
 
-class TotalViewModel: ViewModel() {
-    //Declare the LiveData object
-    private val _total = MutableLiveData<Int>()
-    val total: LiveData<Int> = _total
-    //Initialize the LiveData object
-    init {
-        //postValue is used to set the value of the LiveData object
-        //from a background thread or the main thread
-        //While on the other hand setValue() is used
-        //only if you're on the main thread
-        _total.postValue(0)
+class TotalViewModel : ViewModel() {
+    // LiveData sekarang menampung TotalObject
+    private val _total = MutableLiveData<TotalObject>()
+    val total: LiveData<TotalObject> = _total
+
+    // setTotal sekarang menerima TotalObject
+    fun setTotal(initialTotal: TotalObject) {
+        _total.value = initialTotal
     }
-    //Increment the total value
+
+    // incrementTotal HANYA memperbarui 'value'
+    // dan membiarkan 'date' apa adanya
     fun incrementTotal() {
-        _total.postValue(_total.value?.plus(1))
+        val currentObject = _total.value
+        if (currentObject != null) {
+            // Salin objek, ganti 'value' saja
+            _total.value = currentObject.copy(
+                value = currentObject.value + 1
+            )
+        } else {
+            // Fallback jika datanya null (seharusnya tidak terjadi)
+            _total.value = TotalObject(value = 1, date = Date().toString())
+        }
     }
-    //Set new total value
-    fun setTotal(newTotal: Int) {
-        _total.postValue(newTotal)
-    }
-
 }

@@ -1,20 +1,25 @@
-// Pakai package yang Anda tentukan
+// Pastikan file ini ada di: .../database/Total.kt
 package com.example.lab_week_10.database
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// 1. Anotasi @Entity diletakkan langsung di atas data class
+// Ini adalah kelas yang akan 'ditanam' (embedded)
+data class TotalObject(
+    @ColumnInfo(name = "value") val value: Int,
+    @ColumnInfo(name = "date") val date: String
+)
+
 @Entity(tableName = "total")
-// 2. Tidak perlu membungkusnya dengan "class Total" lain
 data class Total(
-    // 3. Hapus autoGenerate=true agar sesuai dengan MainActivity
-    //    yang menggunakan ID = 1 secara manual.
+    // ID diatur manual (sesuai MainActivity.ID = 1)
     @PrimaryKey
     @ColumnInfo(name = "id")
-    val id: Long, // Hapus nilai default "= 0"
+    val id: Long,
 
-    @ColumnInfo(name = "total")
-    val total: Int
+    // Menanam TotalObject
+    @Embedded
+    val total: TotalObject
 )

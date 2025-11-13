@@ -45,10 +45,13 @@ class FirstFragment : Fragment() {
         val viewModel =
             ViewModelProvider(requireActivity()).get(TotalViewModel::class.java)
         // Observe the LiveData object
-        viewModel.total.observe(viewLifecycleOwner, {
-            // Whenever the value of the LiveData object changes
-            // the updateText() is called, with the new value as the parameter
-            updateText(it)
+        viewModel.total.observe(viewLifecycleOwner, { totalObject ->
+            if (totalObject != null) {
+                // ...
+                // PERBAIKAN: Ambil .value dari objek tersebut
+                updateText(totalObject.value) // BENAR: Mengirim Int
+                // ...
+            }
         })
     }
 
